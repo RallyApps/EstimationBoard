@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- Copyright (c) 2012 Rally Software Development Corp. All rights reserved -->
+<html>
+<head>
+  <title>EstimationBoard</title>
+  <meta name="Name" content="App: EstimationBoard" />
+  <meta name="Version" content="2012.11.12" />
+  <meta name="Vendor" content="Rally Software" />
+
+  <script type="text/javascript" src="/apps/1.32/sdk.js"></script>
+
+  <script type="text/javascript">
+    var projectOid = '__PROJECT_OID__';
+    projectOid = projectOid.indexOf("__") !== -1 ? "723030" : projectOid;
+    var workspaceOid = '__WORKSPACE_OID__';
+    workspaceOid = workspaceOid.indexOf("__") !== -1 ? "722746" : workspaceOid;
+
+    function onLoad() {
+      var rallyDataSource = new rally.sdk.data.RallyDataSource(
+              workspaceOid,
+              projectOid,
+              '__PROJECT_SCOPING_UP__',
+              '__PROJECT_SCOPING_DOWN__');
+
+      rallyDataSource.projectOid = projectOid;
+
+      var settings, estimationBoard, sizes, prefs;
+
+      // Get pref settings exist, use them otherwise use default settings
+      function processPref(results) {
+        if (results.length) {
+            prefs = results;
+            sizes = {};
+            rally.forEach(results[0].Value.fieldInfos, function(value) {
+                sizes[value.planEstimate] = value.label;
+            });
+        } else {
+            sizes = {0:"Not Estimated",
+                1: "Very Small",
+                2: "Small",
+                3: "Medium",
+                5: "Big",
+                8: "Very Big",
+                13: "Huge"};
+        }
+        createBoard(sizes);
+      }
+
+      rallyDataSource.preferences.getAppPreferences(processPref);
+
+      function settingsShow() {
+        if (!settings) {
+            settings = new EstimationBoardSettings(rallyDataSource, sizes, prefs);
+            settings.display();
+        } else {
+            settings.show();
+        }
+      }
+
+      rally.sdk.ui.AppHeader.addPageTool({
+        key:"showSettings",
+        label: "Settings...",
+        onClick: settingsShow
+      });
+
+      function createBoard(sizes) {
+        estimationBoard = new EstimationBoard(rallyDataSource, settingsShow, sizes);
+        estimationBoard.display(dojo.body());
+      }
+    }
+
+    rally.addOnLoad(onLoad);
+  </script>
+</head>
+
+<body>
+  <div style="display:none">
+      <div id="settingsDialogDiv">
+          <div id="validationErrors" class="appMessage error"></div>
+          <table id="settingsTable" cellspacing="7">
+              <tr class="tableHeaderRow">
+                  <td id="columnNameTd">Column Name</td>
+                  <td id="planEstimateTd">Plan Estimate <span id="units"></span></td>
+              </tr>
+              <tbody id="settingsTableBody"></tbody>
+              <tr>
+                  <td id="addLinkCell"></td>
+              </tr>
+          </table>
+      </div>
+  </div>
+</body>
+</html>
