@@ -13,7 +13,7 @@ The Estimation Board app provides teams with an easy view of seeing estimates of
 
 <b>NOTE:</b> To use this app in debug mode (i.e. run App-debug.html from a browser), you need to hardcode a specific project and workspace OID. Otherwise, the hangman variables won't resolve correctly. This doesn't apply in the deployed version.
 
-If you want to start using the app immediately, create an Custom HTML app on your Rally dashboard. Then copy App.html from the deploy folder into the HTML text area. That's it, it should be ready to use.
+If you want to start using the app immediately, create an Custom HTML app on your Rally dashboard. Then copy App.html from the deploy folder into the HTML text area. That's it, it should be ready to use. See [this](http://www.rallydev.com/help/use_apps#create) help link if you don't know how to create a dashboard page for Custom HTML apps.
 
 Or you can just click [here](https://raw.github.com/RallyApps/EstimationBoard/master/deploy/App.html) to find the file and copy it into the custom HTML app.
 
